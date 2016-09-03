@@ -1,0 +1,50 @@
+---
+- name: remove elastic user and homedir
+  user:
+    name: elastic
+    state: absent
+    remove: yes
+- name: remove elastic group
+  group:
+    name: elastic
+    state: absent
+- name: remove unneeded packages
+  zypper:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - htop
+    - sshpass
+    - zsh
+    - git
+    - ansible
+    - puppet
+    - ruby
+    - cvs
+    - rcs
+    - python-argparse
+    - git-email
+    - git-gui
+    - gitk
+    - git-svn
+    - git-core
+    - python-setuptools
+- name: remove unneeded dirs and files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /root/ruby-2.1.8.tar.gz
+    - /root/.subversion
+    - /root/.gem
+    - /root/inst-sys
+    - /usr/local/bin
+    - /usr/local/doc/*
+    - /usr/local/games/*
+    - /usr/local/include/*
+    - /usr/local/lib/*
+    - /usr/local/lib64/*
+    - /usr/local/man/man*/*
+    - /usr/local/share/*
+    - /usr/local/src/*
+    - /etc/init.d/vboxadd-x11
