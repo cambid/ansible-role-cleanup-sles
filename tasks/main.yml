@@ -34,6 +34,7 @@
     path: "{{ item }}"
     state: absent
   with_items:
+    - /etc/sudoers.d/elastic
     - /root/ruby-2.1.8.tar.gz
     - /root/.subversion
     - /root/.gem
