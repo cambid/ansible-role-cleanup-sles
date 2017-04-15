@@ -4,10 +4,12 @@
     name: elastic
     state: absent
     remove: yes
+
 - name: remove elastic group
   group:
     name: elastic
     state: absent
+
 - name: remove unneeded packages
   zypper:
     name: "{{ item }}"
@@ -29,6 +31,7 @@
     - git-svn
     - git-core
     - python-setuptools
+
 - name: remove unneeded dirs and files
   file:
     path: "{{ item }}"
@@ -49,3 +52,23 @@
     - /usr/local/share/*
     - /usr/local/src/*
     - /etc/init.d/vboxadd-x11
+
+- name: "remove old repositories of sles11"
+  zypper_repository:
+    name: "{{ item }}"
+    state: absent
+  when: ansible_os_family == 'Suse' and ansible_distribution_major_version|int == 11
+  with_items:
+    - sles11-dvd2
+    - sles11-sdk-dvd2
+
+- name: "add correct sles11-repos"
+  zypper_repository:
+    name: "{{ item.name }}"
+    repo: "{{ item.repo }}"
+    runrefresh: yes
+    state: present
+  when: ansible_os_family == 'Suse' and ansible_distribution_major_version|int == 11
+  with_items:
+    - { name: 'sles11-sdk-dvd1', repo: 'ftp://ftp.uni-halle.de/suse/SLES.11/SLES11-SP4-SDK/' }
+    - { name: 'sles11-dvd1', repo: 'ftp://ftp.uni-halle.de/suse/SLES.11/SLES11-SP4/' }
